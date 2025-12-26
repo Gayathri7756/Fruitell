@@ -5,6 +5,7 @@ Technologies
 Python (ML models for classification)
 Arduino (embedded system for sensors)
 CSV/Excel for data logging
+
 Project Structure
 Fruitell/ ├── fruitell_program_from_csv.py
 ├── fruitell_train.py
@@ -53,4 +54,5 @@ SNAP → one CSV line (for testing)
 CSVTEST:BEGIN … CSVTEST:END → send rows for training
 CSVACCUM:ON / CSVACCUM:OFF → accumulate or replace totals
 CSVACCUM:CLEAR → clear totals while keeping anchors
+
 TFLAG? / TFLAG:0 / TFLAG:1 → view or set TRAINED flag
