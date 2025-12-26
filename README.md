@@ -1,68 +1,51 @@
-FRUITELL - Smart Fruit Freshness Detection
-Overview
-A portable IoT device to assess fruit freshness non-destructively using ultrasonic sensors. Python ML models classify freshness levels in real-time and store results in CSV/Excel files for analysis.
-Technologies
-Python (ML models for classification)
-Arduino (embedded system for sensors)
-CSV/Excel for data logging
+# FRUITELL - Smart Fruit Freshness Detection
 
-Project Structure
+## Overview
+FRUITELL is a portable IoT device to assess fruit freshness non-destructively using ultrasonic sensors. Python ML models classify freshness levels in real-time and store results in CSV/Excel files for analysis.
 
-Fruitell/ ├── fruitell_program_from_csv.py
-├── fruitell_train.py
-├── testconnect.py
-├── test-port.py
-├── fruitell-sketch/
-│   └── fruitell-sketch.ino
-├── runs/
-│   ├── anchors_update.csv
-│   ├── sample_session.csv
-│   ├── session1.csv
-│   └── smoke_test.csv
-└── README.md
+## Technologies
+- Python (ML models for classification)  
+- Arduino (embedded system for sensors)  
+- CSV for data logging  
 
+## Project Structure
 
-How to Run
+Fruitell/ ├── fruitell_program_from_csv.py 
+          ├── fruitell_train.py 
+          ├── testconnect.py 
+          ├── test-port.py 
+          ├── fruitell-sketch/ 
+          │   └── fruitell-sketch.ino 
+          ├── runs/ 
+          │   └── sample_session.csv 
+          └── README.md
 
-1.Clone the repo:
-git clone https://github.com/YourUsername/Fruitell.git
+## How to Run
 
-2.Navigate to folder and create virtual environment:
-cd Fruitell
-python -m venv venv
+### Record Training Data and Upload to Arduino
+```bash
+# Record training data
+python fruitell_train.py --port COM5 --out runs/sample_session.csv --min-conf 0
 
-3.Activate environment and install dependencies:
-venv\Scripts\activate   # Windows
-source venv/bin/activate # Mac/Linux
-pip install -r requirements.txt
+# Upload recorded CSV to Arduino
+python fruitell_program_from_csv.py --port COM5 --csv runs/sample_session.csv --per_line_delay 0.15
 
-4.Run training or update commands:
-# Training the device
-python fruitell_train.py --port COM8 --out runs/sample_session.csv --min-conf 0
+# Arduino Serial Monitor Commands (Cheat-sheet)
 
-# Updating anchors
-python fruitell_program_from_csv.py --port COM6 --baud 115200 --csv runs/anchors_update.csv
+R → Print anchors, TRAINED, ACCUM_MODE, TOTAL fresh/spoil counts
 
-# Uploading CSV to Arduino
-python fruitell_program_from_csv.py --port COM6 --csv runs/sample_session.csv --per_line_delay 0.15
+F / S → Save Fresh / Spoiled anchor from live median
 
-Arduino Serial Monitor Commands
+MODEL:RESET → Clears TRAINED flag and totals
 
-R → print anchors, TRAINED, ACCUM_MODE, TOTAL fresh/spoil counts
+TRAIN:ON / TRAIN:OFF → Live CSV streaming
 
-F / S → save Fresh / Spoiled anchor from live median
+SNAP → One CSV line (+ human line if trained)
 
-MODEL:RESET → clears TRAINED flag and totals
+CSVTEST:BEGIN … CSVTEST:END → Send rows for training
 
-TRAIN:ON / TRAIN:OFF → live CSV streaming
+CSVACCUM:ON / CSVACCUM:OFF → Set accumulate mode
 
-SNAP → one CSV line (for testing)
+CSVACCUM:CLEAR → Clear totals while keeping anchors
 
-CSVTEST:BEGIN … CSVTEST:END → send rows for training
-
-CSVACCUM:ON / CSVACCUM:OFF → accumulate or replace totals
-
-CSVACCUM:CLEAR → clear totals while keeping anchors
-
-TFLAG? / TFLAG:0 / TFLAG:1 → view or set TRAINED flag
-
+TFLAG? / TFLAG:0 / TFLAG:1 → View or set TRAINED flag
